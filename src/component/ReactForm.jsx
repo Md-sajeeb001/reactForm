@@ -16,13 +16,44 @@ const ReactForm = () => {
     setUser({ ...user, [name]: value });
   };
 
-  const handelSubmit = (e) => {
+  const handelSubmit = async (e) => {
     e.preventDefault();
+
+    const { name, email, password, address } = user;
+
+    if (name && email && password && address) {
+      const res = await fetch(
+        "https://reactform-9a969-default-rtdb.firebaseio.com/reactForm.json",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/post",
+          },
+          body: JSON.stringify({
+            name,
+            email,
+            password,
+            address,
+          }),
+        }
+      );
+      if (res) {
+        setUser({
+          name: "",
+          email: "",
+          password: "",
+          address: "",
+        });
+      }
+      alert("data stored successfullay");
+    } else {
+      return alert("please provid fill the input");
+    }
   };
 
   return (
     <div className="bg-white rounded-2xl p-14 mt-10">
-      <form>
+      <form method="POST">
         <div className="grid grid-cols-2 gap-6 ">
           <div className="space-y-3">
             <label>Name:</label> <br />
@@ -31,7 +62,7 @@ const ReactForm = () => {
               type="text"
               placeholder="your name"
               className="input input-bordered w-full"
-              autoComplete="offf"
+              autoComplete="off"
               value={user.name}
               onChange={getInputValu}
             />
@@ -43,7 +74,7 @@ const ReactForm = () => {
               type="text"
               placeholder="your email"
               className="input input-bordered w-full"
-              autoComplete="offf"
+              autoComplete="off"
               value={user.email}
               onChange={getInputValu}
             />
@@ -55,7 +86,7 @@ const ReactForm = () => {
               type="text"
               placeholder="password"
               className="input input-bordered w-full"
-              autoComplete="offf"
+              autoComplete="off"
               value={user.password}
               onChange={getInputValu}
             />
@@ -67,7 +98,7 @@ const ReactForm = () => {
               type="text"
               placeholder="your address"
               className="input input-bordered w-full"
-              autoComplete="offf"
+              autoComplete="off"
               value={user.address}
               onChange={getInputValu}
             />
@@ -77,6 +108,7 @@ const ReactForm = () => {
           <textarea
             name="message"
             onChange={getInputValu}
+            autoComplete="off"
             placeholder="message"
             className="textarea textarea-bordered textarea-lg w-full "
           ></textarea>
